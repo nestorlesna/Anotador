@@ -67,7 +67,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
   const setConfig = useCallback((config: GameConfig) => {
     const scores: Record<string, PlayerScores> = {}
 
-    if (config.gameId === 'truco') {
+    if (config.gameId === 'truco' || config.gameId === 'uno') {
       for (const player of config.players) {
         scores[player.id] = { playerId: player.id, entries: {}, total: 0 }
       }
@@ -118,16 +118,41 @@ export function GameProvider({ children }: { children: ReactNode }) {
     setState(prev => {
       const updatedScores = { ...prev.scores }
       const playerScore = { ...updatedScores[playerId] }
-      playerScore.total = Math.max(0, points)
-      updatedScores[playerId] = playerScore
+      
+      // Handle UNO history
+      if (prev.config?.gameId === 'uno') {
+        const prevScore = playerScore.total
+        const newScore = prevScore + points
+        
+        // Update history - keep last 5
+        const history = (playerScore.entries['history'] as unknown as number[]) || []
+        const newHistory = [...history, points].slice(-5)
+        
+        playerScore.entries = {
+          ...playerScore.entries,
+          'history': newHistory as any,
+        }
+        playerScore.total = newScore
+        
+        // Advance to next player for UNO
+        const nextPlayerIndex = (prev.currentPlayerIndex + 1) % prev.config.players.length
+        
+        return {
+          ...prev,
+          scores: { ...updatedScores, [playerId]: playerScore },
+          currentPlayerIndex: nextPlayerIndex,
+        }
+      } else {
+        // Truco behavior
+        playerScore.total = Math.max(0, points)
+        const targetScore = prev.config?.targetScore ?? 40
+        const isComplete = Object.values(updatedScores).some(s => s.total >= targetScore)
 
-      const targetScore = prev.config?.targetScore ?? 40
-      const isComplete = Object.values(updatedScores).some(s => s.total >= targetScore)
-
-      return {
-        ...prev,
-        scores: updatedScores,
-        isComplete,
+        return {
+          ...prev,
+          scores: { ...updatedScores, [playerId]: playerScore },
+          isComplete,
+        }
       }
     })
   }, [])

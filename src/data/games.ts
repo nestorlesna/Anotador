@@ -13,6 +13,12 @@ export const games: Game[] = [
     description: 'Truco uruguayo. ¡Nosotros vs Ellos!',
     icon: '🃏',
   },
+  {
+    id: 'uno',
+    name: 'UNO',
+    description: 'El clásico juego de cartas. ¡A 250 o 500 puntos!',
+    icon: '🟥',
+  },
 ]
 
 export const generalaCategories = [

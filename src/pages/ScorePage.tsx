@@ -12,6 +12,10 @@ export default function ScorePage() {
     return <TrucoScorePage />
   }
 
+  if (gameId === 'uno') {
+    return <UnoScorePage />
+  }
+
   const [showScorePicker, setShowScorePicker] = useState(false)
   const [pendingCategory, setPendingCategory] = useState<string | null>(null)
 
@@ -529,6 +533,138 @@ function ScoreSquare({
           strokeLinecap="round"
         />
       </svg>
+    </div>
+  )
+}
+
+function UnoScorePage() {
+  const navigate = useNavigate()
+  const { state, addPoints } = useGame()
+
+  if (!state.config || state.config.gameId !== 'uno') {
+    navigate('/')
+    return null
+  }
+
+  const targetScore = state.config.targetScore || 500
+  const { players } = state.config
+  const currentPlayerIndex = state.currentPlayerIndex
+  const currentPlayer = players[currentPlayerIndex]
+
+  const isComplete = players.some(p => (state.scores[p.id]?.total ?? 0) >= targetScore)
+
+  if (isComplete) {
+    navigate('/uno/result')
+    return null
+  }
+
+  const handleAddPoints = (playerId: string, points: number) => {
+    const currentScore = state.scores[playerId]?.total ?? 0
+    addPoints(playerId, currentScore + points)
+  }
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-indigo-950 to-purple-950 flex flex-col">
+      {/* Header */}
+      <div className="p-4">
+        <div className="max-w-2xl mx-auto bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-4">
+          <div className="flex items-center justify-between">
+            <button
+              onClick={() => navigate('/')}
+              className="text-purple-300 hover:text-white transition-colors"
+            >
+              ← Salir
+            </button>
+            <div className="text-center">
+              <h1 className="text-xl font-bold text-white">🟥 UNO</h1>
+              <p className="text-purple-300 text-sm">A {targetScore} puntos</p>
+            </div>
+            <div className="w-16" />
+          </div>
+        </div>
+      </div>
+
+      {/* Current player indicator */}
+      <div className="px-4 pb-2 max-w-2xl mx-auto w-full">
+        <div className="bg-purple-500/20 border border-purple-500/30 rounded-xl p-3 text-center">
+          <p className="text-purple-200 text-sm">Le toca cargar puntos a</p>
+          <p className="text-white font-bold text-lg">{currentPlayer.name}</p>
+        </div>
+      </div>
+
+      {/* Main content */}
+      <div className="flex-1 px-4 pb-4 max-w-2xl mx-auto w-full">
+        <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-4">
+          <div className="space-y-4">
+            {players.map((player, index) => {
+              const score = state.scores[player.id]?.total ?? 0
+              const history = state.scores[player.id]?.entries['history'] as unknown as number[] || []
+              const isCurrent = index === currentPlayerIndex
+
+              return (
+                <div
+                  key={player.id}
+                  className={`p-4 rounded-xl border ${
+                    isCurrent
+                      ? 'bg-purple-500/20 border-purple-500/40'
+                      : 'bg-white/5 border-white/10'
+                  }`}
+                >
+                  <div className="flex items-center justify-between mb-3">
+                    <span className={`text-lg font-bold ${isCurrent ? 'text-purple-300' : 'text-white'}`}>
+                      {player.name}
+                    </span>
+                    <span className="text-2xl font-bold text-white">{score}</span>
+                  </div>
+
+                  {/* Historical - last 5 rounds */}
+                  {history.length > 0 && (
+                    <div className="mb-3">
+                      <p className="text-purple-300 text-xs mb-1">Últimas rondas:</p>
+                      <div className="flex flex-wrap gap-1">
+                        {history.map((points, i) => (
+                          <span
+                            key={i}
+                            className="bg-white/10 text-purple-200 text-xs px-2 py-1 rounded"
+                          >
+                            +{points}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Score input for current player */}
+                  {isCurrent && (
+                    <div className="flex flex-wrap gap-2">
+                      {[5, 10, 20, 50, 100].map(points => (
+                        <button
+                          key={points}
+                          onClick={() => handleAddPoints(player.id, points)}
+                          className="flex-1 py-2 rounded-lg bg-green-500/20 hover:bg-green-500/30 text-green-300 font-semibold text-sm border border-green-500/30 transition-all active:scale-95"
+                        >
+                          +{points}
+                        </button>
+                      ))}
+                      <button
+                        onClick={() => {
+                          const customPoints = prompt('¿Cuántos puntos?')
+                          if (customPoints && !isNaN(parseInt(customPoints))) {
+                            handleAddPoints(player.id, parseInt(customPoints))
+                          }
+                        }}
+                        className="flex-1 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-purple-200 font-semibold text-sm border border-white/20 transition-all active:scale-95"
+                      >
+                        Otro
+                      </button>
+                    </div>
+                  )}
+                </div>
+              )
+            })}
+          </div>
+        </div>
+      </div>
     </div>
   )
 }
