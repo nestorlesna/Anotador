@@ -1,12 +1,15 @@
 import { Link } from 'react-router-dom'
 import { games } from '../data/games'
 
+const APP_VERSION = '1.0.0'
+
 export default function GameSelect() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-slate-900 flex flex-col items-center justify-center p-6">
       <div className="text-center mb-12">
         <h1 className="text-5xl font-bold text-white mb-3">🎯 Apuntador</h1>
         <p className="text-purple-200 text-lg">Elegí el juego que querés anotar</p>
+        <p className="text-purple-400/50 text-sm mt-2">v{APP_VERSION}</p>
       </div>
 
       <div className="grid gap-4 w-full max-w-md">

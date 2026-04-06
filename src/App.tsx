@@ -4,16 +4,19 @@ import GameSelect from './pages/GameSelect'
 import GameSetup from './pages/GameSetup'
 import ScorePage from './pages/ScorePage'
 import ResultPage from './pages/ResultPage'
+import VersionChecker from './components/VersionChecker'
 
 function App() {
   return (
     <GameProvider>
-      <Routes>
-        <Route path="/" element={<GameSelect />} />
-        <Route path="/:gameId/setup" element={<GameSetup />} />
-        <Route path="/:gameId/score" element={<ScorePage />} />
-        <Route path="/:gameId/result" element={<ResultPage />} />
-      </Routes>
+      <VersionChecker>
+        <Routes>
+          <Route path="/" element={<GameSelect />} />
+          <Route path="/:gameId/setup" element={<GameSetup />} />
+          <Route path="/:gameId/score" element={<ScorePage />} />
+          <Route path="/:gameId/result" element={<ResultPage />} />
+        </Routes>
+      </VersionChecker>
     </GameProvider>
   )
 }
