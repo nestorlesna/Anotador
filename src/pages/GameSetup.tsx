@@ -26,6 +26,10 @@ export default function GameSetup() {
     return <UnoSetup game={game} setConfig={setConfig} navigate={navigate} />
   }
 
+  if (gameId === 'conga') {
+    return <CongaSetup game={game} setConfig={setConfig} navigate={navigate} />
+  }
+
   return null
 }
 
@@ -349,6 +353,108 @@ function UnoSetup({ game, setConfig, navigate }: { game: any; setConfig: any; na
                 ? 'bg-gradient-to-r from-purple-500 to-indigo-500 text-white hover:from-purple-600 hover:to-indigo-600 shadow-lg shadow-purple-500/30 hover:shadow-purple-500/50'
                 : 'bg-white/5 text-purple-400 cursor-not-allowed'
             }`}
+          >
+            ¡Empezar!
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function CongaSetup({ game, setConfig, navigate }: { game: any; setConfig: any; navigate: any }) {
+  const [playerCount, setPlayerCount] = useState(2)
+  const [playerNames, setPlayerNames] = useState<string[]>(['Jugador 1', 'Jugador 2'])
+
+  const updatePlayerName = (index: number, name: string) => {
+    const updated = [...playerNames]
+    updated[index] = name
+    setPlayerNames(updated)
+  }
+
+  const updatePlayerCount = (count: number) => {
+    setPlayerCount(count)
+    const updated = [...playerNames]
+    while (updated.length < count) {
+      updated.push(`Jugador ${updated.length + 1}`)
+    }
+    updated.length = count
+    setPlayerNames(updated)
+  }
+
+  const handleStart = () => {
+    const players = playerNames.map((name, i) => ({
+      id: `player-${i}`,
+      name: name.trim() || `Jugador ${i + 1}`,
+    }))
+
+    setConfig({
+      gameId: game.id,
+      players,
+      targetScore: 100,
+    })
+
+    navigate(`/${game.id}/score`)
+  }
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-slate-900 flex flex-col items-center justify-center p-6">
+      <div className="w-full max-w-md">
+        <div className="text-center mb-8">
+          <span className="text-6xl">{game.icon}</span>
+          <h1 className="text-4xl font-bold text-white mt-4">{game.name}</h1>
+          <p className="text-purple-200 mt-2">Configurá tu partida</p>
+        </div>
+
+        <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-6 space-y-6">
+          <div>
+            <label className="block text-white font-semibold mb-3">
+              ¿Cuántos jugadores?
+            </label>
+            <div className="flex gap-2">
+              {[2, 3, 4, 5, 6].map(n => (
+                <button
+                  key={n}
+                  onClick={() => updatePlayerCount(n)}
+                  className={`flex-1 py-3 rounded-xl font-bold text-lg transition-all ${
+                    playerCount === n
+                      ? 'bg-purple-500 text-white shadow-lg shadow-purple-500/50'
+                      : 'bg-white/10 text-purple-200 hover:bg-white/20'
+                  }`}
+                >
+                  {n}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-white font-semibold mb-3">
+              Nombres de los jugadores
+            </label>
+            <div className="space-y-3">
+              {playerNames.map((name, i) => (
+                <input
+                  key={i}
+                  type="text"
+                  value={name}
+                  onChange={e => updatePlayerName(i, e.target.value)}
+                  placeholder={`Nombre del jugador ${i + 1}`}
+                  className="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-purple-300 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                />
+              ))}
+            </div>
+          </div>
+
+          <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-xl p-4">
+            <p className="text-yellow-300 text-sm text-center">
+              Máximo 100 puntos. El que llega a 100 queda eliminado, pero puede reengancharse una vez con el puntaje del líder.
+            </p>
+          </div>
+
+          <button
+            onClick={handleStart}
+            className="w-full bg-gradient-to-r from-purple-500 to-indigo-500 text-white font-bold py-4 rounded-xl text-lg hover:from-purple-600 hover:to-indigo-600 transition-all shadow-lg shadow-purple-500/30 hover:shadow-purple-500/50 active:scale-95"
           >
             ¡Empezar!
           </button>

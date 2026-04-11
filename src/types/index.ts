@@ -27,6 +27,7 @@ export interface PlayerScores {
   playerId: string
   entries: Record<string, ScoreEntry>
   total: number
+  reengancheUsed?: boolean
 }
 
 export interface GameState {

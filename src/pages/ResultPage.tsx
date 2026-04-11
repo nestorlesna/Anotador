@@ -11,12 +11,15 @@ export default function ResultPage() {
   }
 
   const isTruco = state.config.gameId === 'truco'
+  const isConga = state.config.gameId === 'conga'
+  const isUno = state.config.gameId === 'uno'
   const targetScore = state.config.targetScore
 
+  const isMinScoreGame = isConga || isUno
   const sortedPlayers = [...state.config.players].sort((a, b) => {
     const scoreA = state.scores[a.id]?.total ?? 0
     const scoreB = state.scores[b.id]?.total ?? 0
-    return scoreB - scoreA
+    return isMinScoreGame ? scoreA - scoreB : scoreB - scoreA
   })
 
   return (
@@ -25,7 +28,7 @@ export default function ResultPage() {
         <div className="text-7xl mb-4">🏆</div>
         <h1 className="text-5xl font-bold text-white mb-2">¡{winner} gana!</h1>
         <p className="text-purple-200 text-lg">
-          {isTruco ? 'Finalizó la partida de Truco' : 'Finalizó la partida de Generala'}
+          {isTruco ? 'Finalizó la partida de Truco' : isConga ? 'Finalizó la partida de Conga' : isUno ? 'Finalizó la partida de UNO' : 'Finalizó la partida de Generala'}
         </p>
       </div>
 

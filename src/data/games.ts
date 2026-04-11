@@ -19,6 +19,12 @@ export const games: Game[] = [
     description: 'El clásico juego de cartas. ¡A 250 o 500 puntos!',
     icon: '🟥',
   },
+  {
+    id: 'conga',
+    name: 'Conga',
+    description: 'Juego de eliminación. ¡Último en pie gana!',
+    icon: '🪘',
+  },
 ]
 
 export const generalaCategories = [

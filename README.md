@@ -54,10 +54,20 @@ npm run build
 ```
 Esto genera la carpeta `dist/` con los archivos web.
 
-### 3. Build Android (automático)
+### 3. Sincronizar con Android
+```bash
+npx cap sync
+```
+Este paso copia los archivos de `dist/` a la carpeta del proyecto Android.
+
+### 4. Build Android (automático)
 ```bash
 cd android
 ./gradlew assembleDebug
+```
+O usando el script de npm:
+```bash
+npm run build:debug
 ```
 
 El APK se genera en:

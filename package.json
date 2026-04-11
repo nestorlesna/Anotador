@@ -1,7 +1,7 @@
 {
   "name": "apuntador",
   "private": true,
-  "version": "1.0.0",
+  "version": "1.0.1",
   "versionCode": 1,
   "type": "module",
   "scripts": {
@@ -9,6 +9,8 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
+    "sync": "npx cap sync android",
+    "build:debug": "npm run build && npx cap sync android && cd android && gradlew assembleDebug",
     "build:android": "npm run build && npx cap sync android && npx cap android build --release",
     "build:apk": "npm run build:android"
   },

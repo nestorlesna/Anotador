@@ -8,6 +8,9 @@ export default function ScorePage() {
   const navigate = useNavigate()
   const { state, submitScore } = useGame()
 
+  const [showScorePicker, setShowScorePicker] = useState(false)
+  const [pendingCategory, setPendingCategory] = useState<string | null>(null)
+
   if (gameId === 'truco') {
     return <TrucoScorePage />
   }
@@ -16,8 +19,9 @@ export default function ScorePage() {
     return <UnoScorePage />
   }
 
-  const [showScorePicker, setShowScorePicker] = useState(false)
-  const [pendingCategory, setPendingCategory] = useState<string | null>(null)
+  if (gameId === 'conga') {
+    return <CongaScorePage />
+  }
 
   if (!state.config) {
     navigate('/')
@@ -104,15 +108,15 @@ export default function ScorePage() {
             <div className="text-center">
               <h1 className="text-xl font-bold text-white">🎲 Generala</h1>
             </div>
-            <div className="text-purple-300 text-sm">
+            <div className="text-purple-300 text-xs">
               Faltan {remainingForCurrent}
             </div>
           </div>
 
-          <div className="mt-3 bg-purple-500/20 border border-purple-500/30 rounded-xl p-3 text-center">
-            <p className="text-purple-200 text-sm">Le toca a</p>
-            <p className="text-white font-bold text-lg">{currentPlayer.name}</p>
-            <p className="text-purple-300 text-sm">Elegí una categoría para anotar</p>
+          <div className="mt-2 bg-purple-500/20 border border-purple-500/30 rounded-xl p-2 text-center">
+            <p className="text-purple-200 text-xs">Le toca a</p>
+            <p className="text-white font-bold text-base">{currentPlayer.name}</p>
+            <p className="text-purple-300 text-xs">Elegí una categoría</p>
           </div>
         </div>
       </div>
@@ -121,13 +125,13 @@ export default function ScorePage() {
         <table className="w-full border-collapse">
           <thead>
             <tr>
-              <th className="bg-indigo-800/50 text-purple-200 font-semibold p-3 text-left text-sm border border-white/10 sticky left-0 bg-indigo-800/50 z-10">
+              <th className="bg-indigo-800/50 text-purple-200 font-semibold p-2 text-left text-xs border border-white/10 sticky left-0 bg-indigo-800/50 z-10">
                 Categoría
               </th>
               {players.map(player => (
                 <th
                   key={player.id}
-                  className={`bg-indigo-800/50 font-semibold p-3 text-center text-sm border border-white/10 min-w-[100px] ${
+                  className={`bg-indigo-800/50 font-semibold p-2 text-center text-xs border border-white/10 min-w-[80px] ${
                     player.id === currentPlayer.id ? 'text-purple-300 bg-purple-800/50' : 'text-purple-200'
                   }`}
                 >
@@ -139,7 +143,7 @@ export default function ScorePage() {
           <tbody>
             {upperCategories.map(cat => (
               <tr key={cat.id}>
-                <td className="p-3 text-white text-sm border border-white/10 sticky left-0 bg-slate-900/90 z-10">
+                <td className="p-2 text-white text-xs border border-white/10 sticky left-0 bg-slate-900/90 z-10">
                   {cat.label}
                 </td>
                 {players.map(player => {
@@ -151,7 +155,7 @@ export default function ScorePage() {
                     <td
                       key={player.id}
                       onClick={() => clickable && handleCellClick(player.id, cat.id)}
-                      className={`p-3 text-center border border-white/10 min-w-[100px] ${
+                      className={`p-2 text-center border border-white/10 min-w-[80px] ${
                         clickable
                           ? 'bg-purple-500/30 cursor-pointer hover:bg-purple-500/40'
                           : done
@@ -159,7 +163,7 @@ export default function ScorePage() {
                           : 'text-purple-400/50'
                       }`}
                     >
-                      <span className={`font-bold text-lg ${clickable ? 'text-white animate-pulse' : ''}`}>
+                      <span className={`font-bold text-sm ${clickable ? 'text-white animate-pulse' : ''}`}>
                         {score !== null ? score : clickable ? '—' : ''}
                       </span>
                     </td>
@@ -169,12 +173,12 @@ export default function ScorePage() {
             ))}
 
             <tr className="bg-indigo-800/30">
-              <td className="p-3 text-purple-300 text-sm border border-white/10 sticky left-0 bg-indigo-800/30 z-10">
+              <td className="p-2 text-purple-300 text-xs border border-white/10 sticky left-0 bg-indigo-800/30 z-10">
                 Bonus ({BONUS_THRESHOLD}+)
               </td>
               {players.map(player => (
-                <td key={player.id} className="p-3 text-center border border-white/10">
-                  <span className={`font-bold text-sm ${hasBonus(player.id) ? 'text-green-400' : 'text-purple-400'}`}>
+                <td key={player.id} className="p-2 text-center border border-white/10">
+                  <span className={`font-bold text-xs ${hasBonus(player.id) ? 'text-green-400' : 'text-purple-400'}`}>
                     {hasBonus(player.id) ? `+${BONUS_POINTS}` : `${getUpperBonus(player.id)}/${BONUS_THRESHOLD}`}
                   </span>
                 </td>
@@ -183,7 +187,7 @@ export default function ScorePage() {
 
             {lowerCategories.map(cat => (
               <tr key={cat.id}>
-                <td className="p-3 text-white text-sm border border-white/10 sticky left-0 bg-slate-900/90 z-10">
+                <td className="p-2 text-white text-xs border border-white/10 sticky left-0 bg-slate-900/90 z-10">
                   {cat.label}
                   {cat.values && (
                     <span className="block text-purple-400 text-xs">
@@ -200,7 +204,7 @@ export default function ScorePage() {
                     <td
                       key={player.id}
                       onClick={() => clickable && handleCellClick(player.id, cat.id)}
-                      className={`p-3 text-center border border-white/10 min-w-[100px] ${
+                      className={`p-2 text-center border border-white/10 min-w-[80px] ${
                         clickable
                           ? 'bg-purple-500/30 cursor-pointer hover:bg-purple-500/40'
                           : done
@@ -208,7 +212,7 @@ export default function ScorePage() {
                           : 'text-purple-400/50'
                       }`}
                     >
-                      <span className={`font-bold text-lg ${clickable ? 'text-white animate-pulse' : ''}`}>
+                      <span className={`font-bold text-sm ${clickable ? 'text-white animate-pulse' : ''}`}>
                         {score !== null ? score : clickable ? '—' : ''}
                       </span>
                     </td>
@@ -218,12 +222,12 @@ export default function ScorePage() {
             ))}
 
             <tr className="bg-gradient-to-r from-purple-800/50 to-indigo-800/50">
-              <td className="p-4 text-white font-bold text-lg border border-white/10 sticky left-0 bg-purple-800/50 z-10">
+              <td className="p-3 text-white font-bold text-sm border border-white/10 sticky left-0 bg-purple-800/50 z-10">
                 TOTAL
               </td>
               {players.map(player => (
-                <td key={player.id} className="p-4 text-center border border-white/10">
-                  <span className="font-bold text-2xl text-white">
+                <td key={player.id} className="p-3 text-center border border-white/10">
+                  <span className="font-bold text-lg text-white">
                     {state.scores[player.id]?.total ?? 0}
                   </span>
                 </td>
@@ -257,7 +261,7 @@ export default function ScorePage() {
               0 (Tachar)
             </button>
             <button
-              onClick={() => { setShowScorePicker(false); setPendingCategory(null) }}
+onClick={() => { setShowScorePicker(false); setPendingCategory(null) }}
               className="w-full text-purple-300 hover:text-white py-2 transition-colors"
             >
               Cancelar
@@ -284,9 +288,7 @@ function TrucoScorePage() {
   const nosotrosScore = state.scores['nosotros']?.total ?? 0
   const ellosScore = state.scores['ellos']?.total ?? 0
 
-  const isComplete = nosotrosScore >= targetScore || ellosScore >= targetScore
-
-  if (isComplete) {
+  if (state.isComplete) {
     navigate('/truco/result')
     return null
   }
@@ -294,13 +296,6 @@ function TrucoScorePage() {
   const handleAddPoint = (teamId: string) => {
     const currentScore = state.scores[teamId]?.total ?? 0
     addPoints(teamId, currentScore + 1)
-  }
-
-  const handleRemovePoint = (teamId: string) => {
-    const currentScore = state.scores[teamId]?.total ?? 0
-    if (currentScore > 0) {
-      addPoints(teamId, currentScore - 1)
-    }
   }
 
   const renderSquares = (score: number, section: 'malas' | 'buenas') => {
@@ -330,18 +325,17 @@ function TrucoScorePage() {
   }
 
   const renderTeamRow = (teamId: string, score: number, section: 'malas' | 'buenas') => (
-    <div className="flex items-center justify-between gap-3">
-      <span className="text-white font-semibold text-sm w-20">{teamId === 'nosotros' ? 'Nosotros' : 'Ellos'}</span>
-      <div className="flex flex-wrap justify-center gap-1 flex-1">
+    <div className="flex items-center justify-between gap-2">
+      <span className="text-white font-semibold text-xs w-16">{teamId === 'nosotros' ? 'Nosotros' : 'Ellos'}</span>
+      <div className="flex flex-wrap justify-center gap-0.5 flex-1">
         {renderSquares(score, section)}
       </div>
-      <span className="text-white font-bold text-lg w-10 text-right">{score}</span>
+      <span className="text-white font-bold text-base w-8 text-right">{score}</span>
     </div>
   )
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-indigo-950 to-purple-950 flex flex-col">
-      {/* Header */}
       <div className="p-4">
         <div className="max-w-2xl mx-auto bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-4">
           <div className="flex items-center justify-between">
@@ -360,94 +354,42 @@ function TrucoScorePage() {
         </div>
       </div>
 
-      {/* Main content - split into Malas / Buenas */}
       <div className="flex-1 flex flex-col px-4 pb-4 max-w-2xl mx-auto w-full">
-        {/* Malas section */}
         <div className="flex-1 bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-4 mb-3">
           <div className="text-center mb-3">
             <span className="text-sm font-bold text-yellow-400 uppercase tracking-wider">Malas</span>
             <span className="text-purple-300 text-xs ml-2">(0 – {halfScore})</span>
           </div>
-          <div className="space-y-4">
+          <div className="space-y-3">
             {renderTeamRow('nosotros', nosotrosScore, 'malas')}
             {renderTeamRow('ellos', ellosScore, 'malas')}
           </div>
         </div>
 
-        {/* Divider franja */}
-        <div className="h-1 bg-gradient-to-r from-yellow-500/60 via-purple-500 to-green-500/60 rounded-full mb-3" />
-
-        {/* Buenas section */}
         <div className="flex-1 bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-4 mb-3">
           <div className="text-center mb-3">
             <span className="text-sm font-bold text-green-400 uppercase tracking-wider">Buenas</span>
             <span className="text-purple-300 text-xs ml-2">({halfScore} – {targetScore})</span>
           </div>
-          <div className="space-y-4">
+          <div className="space-y-3">
             {renderTeamRow('nosotros', nosotrosScore, 'buenas')}
             {renderTeamRow('ellos', ellosScore, 'buenas')}
           </div>
         </div>
 
-        {/* Controls */}
-        <div className="grid grid-cols-2 gap-3">
-          {/* Nosotros controls */}
-          <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-3">
-            <p className="text-white font-bold text-center text-sm mb-2">Nosotros</p>
-            <div className="flex gap-2">
-              <button
-                onClick={() => handleRemovePoint('nosotros')}
-                disabled={nosotrosScore === 0}
-                className={`flex-1 py-3 rounded-xl font-bold text-lg transition-all active:scale-95 ${
-                  nosotrosScore === 0
-                    ? 'bg-white/5 text-purple-400 cursor-not-allowed'
-                    : 'bg-red-500/20 hover:bg-red-500/30 text-red-300 border border-red-500/30'
-                }`}
-              >
-                −
-              </button>
-              <button
-                onClick={() => handleAddPoint('nosotros')}
-                disabled={nosotrosScore >= targetScore}
-                className={`flex-1 py-3 rounded-xl font-bold text-lg transition-all active:scale-95 ${
-                  nosotrosScore >= targetScore
-                    ? 'bg-white/5 text-purple-400 cursor-not-allowed'
-                    : 'bg-green-500/20 hover:bg-green-500/30 text-green-300 border border-green-500/30'
-                }`}
-              >
-                +
-              </button>
-            </div>
-          </div>
-
-          {/* Ellos controls */}
-          <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-3">
-            <p className="text-white font-bold text-center text-sm mb-2">Ellos</p>
-            <div className="flex gap-2">
-              <button
-                onClick={() => handleRemovePoint('ellos')}
-                disabled={ellosScore === 0}
-                className={`flex-1 py-3 rounded-xl font-bold text-lg transition-all active:scale-95 ${
-                  ellosScore === 0
-                    ? 'bg-white/5 text-purple-400 cursor-not-allowed'
-                    : 'bg-red-500/20 hover:bg-red-500/30 text-red-300 border border-red-500/30'
-                }`}
-              >
-                −
-              </button>
-              <button
-                onClick={() => handleAddPoint('ellos')}
-                disabled={ellosScore >= targetScore}
-                className={`flex-1 py-3 rounded-xl font-bold text-lg transition-all active:scale-95 ${
-                  ellosScore >= targetScore
-                    ? 'bg-white/5 text-purple-400 cursor-not-allowed'
-                    : 'bg-green-500/20 hover:bg-green-500/30 text-green-300 border border-green-500/30'
-                }`}
-              >
-                +
-              </button>
-            </div>
-          </div>
+        <div className="flex gap-3">
+          <button
+            onClick={() => handleAddPoint('nosotros')}
+            className="flex-1 bg-green-500/20 hover:bg-green-500/30 border border-green-500/30 rounded-xl py-3 text-green-300 font-bold text-lg transition-all active:scale-95"
+          >
+            +1 Nosotros
+          </button>
+          <button
+            onClick={() => handleAddPoint('ellos')}
+            className="flex-1 bg-blue-500/20 hover:bg-blue-500/30 border border-blue-500/30 rounded-xl py-3 text-blue-300 font-bold text-lg transition-all active:scale-95"
+          >
+            +1 Ellos
+          </button>
         </div>
       </div>
     </div>
@@ -465,8 +407,8 @@ function ScoreSquare({
   isPast: boolean
   isMalas: boolean
 }) {
-  const size = 60
-  const strokeWidth = 3
+  const size = 44
+  const strokeWidth = 2
 
   const baseColor = isPast || isActive
     ? (isMalas ? '#fbbf24' : '#4ade80')
@@ -524,10 +466,10 @@ function ScoreSquare({
         />
         {/* Diagonal */}
         <line
-          x1={strokeWidth / 2}
-          y1={strokeWidth / 2}
-          x2={size - strokeWidth / 2}
-          y2={size - strokeWidth / 2}
+          x1={strokeWidth / 2 + 2}
+          y1={strokeWidth / 2 + 2}
+          x2={size - strokeWidth / 2 - 2}
+          y2={size - strokeWidth / 2 - 2}
           stroke={points >= 5 ? baseColor : 'rgba(255,255,255,0.1)'}
           strokeWidth={strokeWidth}
           strokeLinecap="round"
@@ -540,6 +482,8 @@ function ScoreSquare({
 function UnoScorePage() {
   const navigate = useNavigate()
   const { state, addPoints } = useGame()
+  const [customScore, setCustomScore] = useState(10)
+  const [showCustom, setShowCustom] = useState(false)
 
   if (!state.config || state.config.gameId !== 'uno') {
     navigate('/')
@@ -551,16 +495,13 @@ function UnoScorePage() {
   const currentPlayerIndex = state.currentPlayerIndex
   const currentPlayer = players[currentPlayerIndex]
 
-  const isComplete = players.some(p => (state.scores[p.id]?.total ?? 0) >= targetScore)
-
-  if (isComplete) {
+  if (state.isComplete) {
     navigate('/uno/result')
     return null
   }
 
   const handleAddPoints = (playerId: string, points: number) => {
-    const currentScore = state.scores[playerId]?.total ?? 0
-    addPoints(playerId, currentScore + points)
+    addPoints(playerId, points)
   }
 
   return (
@@ -577,7 +518,7 @@ function UnoScorePage() {
             </button>
             <div className="text-center">
               <h1 className="text-xl font-bold text-white">🟥 UNO</h1>
-              <p className="text-purple-300 text-sm">A {targetScore} puntos</p>
+              <p className="text-purple-300 text-xs">A {targetScore} puntos</p>
             </div>
             <div className="w-16" />
           </div>
@@ -586,8 +527,8 @@ function UnoScorePage() {
 
       {/* Current player indicator */}
       <div className="px-4 pb-2 max-w-2xl mx-auto w-full">
-        <div className="bg-purple-500/20 border border-purple-500/30 rounded-xl p-3 text-center">
-          <p className="text-purple-200 text-sm">Le toca cargar puntos a</p>
+        <div className="bg-purple-500/20 border border-purple-500/30 rounded-xl p-2 text-center">
+          <p className="text-purple-200 text-xs">Le toca cargar puntos a</p>
           <p className="text-white font-bold text-lg">{currentPlayer.name}</p>
         </div>
       </div>
@@ -637,23 +578,18 @@ function UnoScorePage() {
                   {/* Score input for current player */}
                   {isCurrent && (
                     <div className="flex flex-wrap gap-2">
-                      {[5, 10, 20, 50, 100].map(points => (
+                      {[0, 5, 10, 20, 50].map(points => (
                         <button
                           key={points}
                           onClick={() => handleAddPoints(player.id, points)}
-                          className="flex-1 py-2 rounded-lg bg-green-500/20 hover:bg-green-500/30 text-green-300 font-semibold text-sm border border-green-500/30 transition-all active:scale-95"
+                          className="flex-1 py-2 rounded-lg bg-green-500/20 hover:bg-green-500/30 text-green-300 font-semibold text-xs border border-green-500/30 transition-all active:scale-95"
                         >
-                          +{points}
+                          {points === 0 ? '0' : `+${points}`}
                         </button>
                       ))}
                       <button
-                        onClick={() => {
-                          const customPoints = prompt('¿Cuántos puntos?')
-                          if (customPoints && !isNaN(parseInt(customPoints))) {
-                            handleAddPoints(player.id, parseInt(customPoints))
-                          }
-                        }}
-                        className="flex-1 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-purple-200 font-semibold text-sm border border-white/20 transition-all active:scale-95"
+                        onClick={() => setShowCustom(true)}
+                        className="flex-1 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-purple-200 font-semibold text-xs border border-white/20 transition-all active:scale-95"
                       >
                         Otro
                       </button>
@@ -665,6 +601,277 @@ function UnoScorePage() {
           </div>
         </div>
       </div>
+
+      {/* Custom score popup */}
+      {showCustom && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+          <div className="bg-slate-800 border border-white/20 rounded-2xl p-6 w-full max-w-xs">
+            <h3 className="text-white font-bold text-xl mb-4 text-center">Puntos personalizados</h3>
+            <div className="flex items-center justify-center gap-4 mb-4">
+              <button
+                onClick={() => setCustomScore(Math.max(1, customScore - 1))}
+                className="w-12 h-12 rounded-full bg-red-500/20 hover:bg-red-500/40 text-red-400 font-bold text-2xl transition-all active:scale-95"
+              >
+                −
+              </button>
+              <span className="text-white font-bold text-3xl w-16 text-center">{customScore}</span>
+              <button
+                onClick={() => setCustomScore(customScore + 1)}
+                className="w-12 h-12 rounded-full bg-green-500/20 hover:bg-green-500/40 text-green-400 font-bold text-2xl transition-all active:scale-95"
+              >
+                +
+              </button>
+            </div>
+            <button
+              onClick={() => {
+                handleAddPoints(currentPlayer.id, customScore)
+                setShowCustom(false)
+                setCustomScore(10)
+              }}
+              className="w-full bg-purple-500 hover:bg-purple-600 text-white font-bold py-3 rounded-xl text-lg transition-all active:scale-95 mb-3"
+            >
+              Confirmar
+            </button>
+            <button
+              onClick={() => {
+                setShowCustom(false)
+                setCustomScore(10)
+              }}
+              className="w-full text-purple-300 hover:text-white py-2 transition-colors"
+            >
+              Cancelar
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
+function CongaScorePage() {
+  const navigate = useNavigate()
+  const { state, addPoints, applyReenganche } = useGame()
+  const [customScore, setCustomScore] = useState(10)
+  const [showCustom, setShowCustom] = useState(false)
+  const [reengancheTarget, setReengancheTarget] = useState<string | null>(null)
+
+  if (!state.config || state.config.gameId !== 'conga') {
+    navigate('/')
+    return null
+  }
+
+  const { players } = state.config
+  const currentPlayerIndex = state.currentPlayerIndex
+  const currentPlayer = players[currentPlayerIndex]
+  const congaTarget = 100
+
+  const lowestScore = players.length > 0
+    ? Math.min(...players.map(p => state.scores[p.id]?.total ?? 0))
+    : 0
+  const activePlayers = players.filter(p => (state.scores[p.id]?.total ?? 0) < congaTarget)
+
+  if (state.isComplete) {
+    navigate('/conga/result')
+    return null
+  }
+
+  const handleAddPoints = (playerId: string, points: number) => {
+    addPoints(playerId, points)
+  }
+
+  const handleReenganche = (playerId: string) => {
+    const playerScore = state.scores[playerId]
+    if (playerScore?.reengancheUsed) return
+    setReengancheTarget(playerId)
+  }
+
+  const confirmReenganche = () => {
+    if (reengancheTarget) {
+      applyReenganche(reengancheTarget)
+      setReengancheTarget(null)
+    }
+  }
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-indigo-950 to-purple-950 flex flex-col">
+      <div className="p-4">
+        <div className="max-w-2xl mx-auto bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-4">
+          <div className="flex items-center justify-between">
+            <button
+              onClick={() => navigate('/')}
+              className="text-purple-300 hover:text-white transition-colors"
+            >
+              ← Salir
+            </button>
+            <div className="text-center">
+              <h1 className="text-xl font-bold text-white">🪘 Conga</h1>
+              <p className="text-purple-300 text-xs">Máx {congaTarget} puntos</p>
+            </div>
+            <div className="w-16" />
+          </div>
+        </div>
+      </div>
+
+      <div className="px-4 pb-2 max-w-2xl mx-auto w-full">
+        <div className="bg-purple-500/20 border border-purple-500/30 rounded-xl p-2 text-center">
+          <p className="text-purple-200 text-xs">Le toca cargar puntos a</p>
+          <p className="text-white font-bold text-lg">{currentPlayer.name}</p>
+        </div>
+      </div>
+
+      <div className="flex-1 px-4 pb-4 max-w-2xl mx-auto w-full">
+        <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-4">
+          <div className="space-y-4">
+            {players.map((player, index) => {
+              const score = state.scores[player.id]?.total ?? 0
+              const history = state.scores[player.id]?.entries['history'] as unknown as number[] || []
+              const isCurrent = index === currentPlayerIndex
+              const isEliminated = score >= congaTarget
+              const reengancheUsed = state.scores[player.id]?.reengancheUsed ?? false
+              const canReenganche = isEliminated && !reengancheUsed && activePlayers.length > 1
+
+              return (
+                <div
+                  key={player.id}
+                  className={`p-4 rounded-xl border ${
+                    isEliminated
+                      ? 'bg-red-500/10 border-red-500/30 opacity-70'
+                      : isCurrent
+                      ? 'bg-purple-500/20 border-purple-500/40'
+                      : 'bg-white/5 border-white/10'
+                  }`}
+                >
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center gap-2">
+                      <span className={`text-lg font-bold ${isCurrent ? 'text-purple-300' : isEliminated ? 'text-red-400' : 'text-white'}`}>
+                        {player.name}
+                      </span>
+                      {isEliminated && (
+                        <span className="text-xs bg-red-500/30 text-red-300 px-2 py-0.5 rounded">Eliminado</span>
+                      )}
+                    </div>
+                    <span className="text-2xl font-bold text-white">{score}/{congaTarget}</span>
+                  </div>
+
+                  {history.length > 0 && (
+                    <div className="mb-3">
+                      <p className="text-purple-300 text-xs mb-1">Últimas rondas:</p>
+                      <div className="flex flex-wrap gap-1">
+                        {history.map((points, i) => (
+                          <span
+                            key={i}
+                            className="bg-white/10 text-purple-200 text-xs px-2 py-1 rounded"
+                          >
+                            +{points}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {isCurrent && !isEliminated && (
+                    <div className="flex flex-wrap gap-2">
+                      {[0, 5, 10, 20, 50].map(points => (
+                        <button
+                          key={points}
+                          onClick={() => handleAddPoints(player.id, points)}
+                          className="flex-1 py-2 rounded-lg bg-green-500/20 hover:bg-green-500/30 text-green-300 font-semibold text-xs border border-green-500/30 transition-all active:scale-95"
+                        >
+                          {points === 0 ? '0' : `+${points}`}
+                        </button>
+                      ))}
+                      <button
+                        onClick={() => setShowCustom(true)}
+                        className="flex-1 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-purple-200 font-semibold text-xs border border-white/20 transition-all active:scale-95"
+                      >
+                        Otro
+                      </button>
+                    </div>
+                  )}
+
+                  {canReenganche && (
+                    <button
+                      onClick={() => handleReenganche(player.id)}
+                      className="w-full mt-2 py-2 rounded-lg bg-yellow-500/20 hover:bg-yellow-500/30 text-yellow-300 font-semibold text-sm border border-yellow-500/30 transition-all active:scale-95"
+                    >
+                      🔄 Reenganchar ({lowestScore} pts)
+                    </button>
+                  )}
+
+                  {reengancheUsed && (
+                    <p className="text-purple-400 text-xs mt-2 text-center">Reenganche usado</p>
+                  )}
+                </div>
+              )
+            })}
+          </div>
+        </div>
+      </div>
+
+      {showCustom && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+          <div className="bg-slate-800 border border-white/20 rounded-2xl p-6 w-full max-w-xs">
+            <h3 className="text-white font-bold text-xl mb-4 text-center">Puntos personalizados</h3>
+            <div className="flex items-center justify-center gap-4 mb-4">
+              <button
+                onClick={() => setCustomScore(Math.max(1, customScore - 1))}
+                className="w-12 h-12 rounded-full bg-red-500/20 hover:bg-red-500/40 text-red-400 font-bold text-2xl transition-all active:scale-95"
+              >
+                −
+              </button>
+              <span className="text-white font-bold text-3xl w-16 text-center">{customScore}</span>
+              <button
+                onClick={() => setCustomScore(customScore + 1)}
+                className="w-12 h-12 rounded-full bg-green-500/20 hover:bg-green-500/40 text-green-400 font-bold text-2xl transition-all active:scale-95"
+              >
+                +
+              </button>
+            </div>
+            <button
+              onClick={() => {
+                handleAddPoints(currentPlayer.id, customScore)
+                setShowCustom(false)
+                setCustomScore(10)
+              }}
+              className="w-full bg-purple-500 hover:bg-purple-600 text-white font-bold py-3 rounded-xl text-lg transition-all active:scale-95 mb-3"
+            >
+              Confirmar
+            </button>
+            <button
+              onClick={() => {
+                setShowCustom(false)
+                setCustomScore(10)
+              }}
+              className="w-full text-purple-300 hover:text-white py-2 transition-colors"
+            >
+              Cancelar
+            </button>
+          </div>
+        </div>
+      )}
+
+      {reengancheTarget && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+          <div className="bg-slate-800 border border-white/20 rounded-2xl p-6 w-full max-w-xs">
+            <h3 className="text-white font-bold text-xl mb-2 text-center">🔄 Reenganche</h3>
+            <p className="text-purple-200 text-center mb-4">
+              ¿Reenganchar con <span className="text-yellow-400 font-bold">{lowestScore}</span> puntos?
+            </p>
+            <button
+              onClick={confirmReenganche}
+              className="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-3 rounded-xl text-lg transition-all active:scale-95 mb-3"
+            >
+              Confirmar
+            </button>
+            <button
+              onClick={() => setReengancheTarget(null)}
+              className="w-full text-purple-300 hover:text-white py-2 transition-colors"
+            >
+              Cancelar
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
