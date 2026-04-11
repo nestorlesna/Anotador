@@ -60,17 +60,15 @@ npx cap sync
 ```
 Este paso copia los archivos de `dist/` a la carpeta del proyecto Android.
 
-### 4. Build Android (automático)
-```bash
-cd android
-./gradlew assembleDebug
-```
-O usando el script de npm:
-```bash
-npm run build:debug
-```
+### 4. Build Android (Manual en Android Studio)
 
-El APK se genera en:
+Debido a que el script automático puede fallar en algunos entornos, el proceso recomendado es generar el APK (o WAR como se menciona a veces) manualmente:
+
+1. Abrir la carpeta `android/` del proyecto en **Android Studio**.
+2. Ir al menú superior: **Build > Build Bundle(s) / APK(s) > Build APK(s)**.
+3. Esperar a que termine el proceso. Android Studio mostrará una notificación con el link "locate" para ver el archivo.
+
+El APK generado suele estar en:
 ```
 android/app/build/outputs/apk/debug/app-debug.apk
 ```
@@ -114,18 +112,18 @@ Para instalar: descargar el APK y abrirlo en el Android.
 ### Versiones siguientes
 
 1. Editar `package.json` → cambiar `version` (ej: `1.0.0` → `1.0.1`)
-2. Ejecutar build:
+2. Ejecutar build web y sincronizar:
    ```bash
    npm run build
-   cd android
-   ./gradlew assembleDebug
+   npx cap sync
    ```
-3. Copiar APK de `android/app/build/outputs/apk/debug/app-debug.apk`
-4. Renombrar a `apuntador-v1.0.1.apk`
-5. Ir a https://github.com/nestorlesna/Anotador/releases
-6. Click **"Create a new release"**
-7. Tag: `v1.0.1`, Title: `v1.0.1 - APK`, Description con el `versionCode` correspondiente
-8. Subir el APK
+3. Generar el APK manualmente en **Android Studio** (Build > Build APKs).
+4. Copiar APK de `android/app/build/outputs/apk/debug/app-debug.apk`
+5. Renombrar a `apuntador-v1.0.1.apk`
+6. Ir a https://github.com/nestorlesna/Anotador/releases
+7. Click **"Create a new release"**
+8. Tag: `v1.0.1`, Title: `v1.0.1 - APK`, Description con el `versionCode` correspondiente
+9. Subir el APK
 
 ---
 
