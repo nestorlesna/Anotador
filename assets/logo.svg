@@ -1,0 +1,124 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <!-- Fondo degradado oscuro -->
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1" gradientUnits="objectBoundingBox">
+      <stop offset="0%" stop-color="#0d0220"/>
+      <stop offset="100%" stop-color="#1a0540"/>
+    </linearGradient>
+
+    <!-- Pagina de libreta -->
+    <linearGradient id="pageGrad" x1="0" y1="0" x2="0" y2="1" gradientUnits="objectBoundingBox">
+      <stop offset="0%" stop-color="#faf5ff"/>
+      <stop offset="100%" stop-color="#e8d5ff"/>
+    </linearGradient>
+
+    <!-- Sombra libreta -->
+    <filter id="shadow" x="-8%" y="-5%" width="120%" height="120%">
+      <feDropShadow dx="4" dy="6" stdDeviation="8" flood-color="#000000" flood-opacity="0.5"/>
+    </filter>
+
+    <!-- Sombra lapiz -->
+    <filter id="pencilShadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="3" dy="5" stdDeviation="6" flood-color="#000000" flood-opacity="0.55"/>
+    </filter>
+
+    <!-- Filtro blur para NL -->
+    <filter id="nlBlur" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="14"/>
+    </filter>
+
+    <!-- Clip para fondo redondeado -->
+    <clipPath id="bgClip">
+      <rect width="512" height="512" rx="90"/>
+    </clipPath>
+  </defs>
+
+  <!-- Fondo -->
+  <rect width="512" height="512" rx="90" fill="url(#bg)"/>
+
+  <!-- Letras NL difuminadas en el fondo -->
+  <g clip-path="url(#bgClip)">
+    <text x="256" y="330"
+          font-family="'Arial Black', Impact, sans-serif"
+          font-size="310"
+          font-weight="900"
+          text-anchor="middle"
+          fill="#8040d0"
+          opacity="0.22"
+          filter="url(#nlBlur)">NL</text>
+  </g>
+
+  <!-- Libreta -->
+  <g filter="url(#shadow)">
+    <!-- Cuerpo de la libreta -->
+    <rect x="108" y="68" width="272" height="346" rx="12" fill="url(#pageGrad)"/>
+    <!-- Lomo (izquierda) -->
+    <rect x="108" y="68" width="32" height="346" rx="8" fill="#6020b0"/>
+    <!-- Borde superior sutil -->
+    <rect x="108" y="68" width="272" height="16" rx="8" fill="#7535c8" opacity="0.25"/>
+  </g>
+
+  <!-- Anillas espiral -->
+  <g fill="none" stroke="#d4baee" stroke-width="3.5">
+    <circle cx="124" cy="122" r="10"/>
+    <circle cx="124" cy="158" r="10"/>
+    <circle cx="124" cy="194" r="10"/>
+    <circle cx="124" cy="230" r="10"/>
+    <circle cx="124" cy="266" r="10"/>
+    <circle cx="124" cy="302" r="10"/>
+    <circle cx="124" cy="338" r="10"/>
+    <circle cx="124" cy="374" r="10"/>
+  </g>
+  <!-- Tapas de anillas (rectangulo que cubre mitad derecha para dar efecto 3d) -->
+  <g fill="#1a0540" opacity="0.45">
+    <rect x="124" y="112" width="10" height="20" rx="0"/>
+    <rect x="124" y="148" width="10" height="20" rx="0"/>
+    <rect x="124" y="184" width="10" height="20" rx="0"/>
+    <rect x="124" y="220" width="10" height="20" rx="0"/>
+    <rect x="124" y="256" width="10" height="20" rx="0"/>
+    <rect x="124" y="292" width="10" height="20" rx="0"/>
+    <rect x="124" y="328" width="10" height="20" rx="0"/>
+    <rect x="124" y="364" width="10" height="20" rx="0"/>
+  </g>
+
+  <!-- Lineas de la libreta -->
+  <g stroke="#c0a0e0" stroke-width="2" stroke-linecap="round">
+    <line x1="154" y1="136" x2="358" y2="136"/>
+    <line x1="154" y1="172" x2="358" y2="172"/>
+    <line x1="154" y1="208" x2="358" y2="208"/>
+    <line x1="154" y1="244" x2="358" y2="244"/>
+    <line x1="154" y1="280" x2="358" y2="280"/>
+    <line x1="154" y1="316" x2="358" y2="316"/>
+    <line x1="154" y1="352" x2="358" y2="352"/>
+    <line x1="154" y1="388" x2="358" y2="388"/>
+  </g>
+
+  <!-- Lapiz diagonal (de abajo-izquierda hacia arriba-derecha) -->
+  <!-- Centro en (308, 305), rotado -50 grados -->
+  <g transform="translate(308, 305) rotate(-50)" filter="url(#pencilShadow)">
+    <!-- Borrador (rosa) -->
+    <rect x="72" y="-13" width="26" height="26" rx="4" fill="#ff8888"/>
+    <!-- Brillo borrador -->
+    <rect x="74" y="-11" width="10" height="5" rx="2" fill="#ffbbbb" opacity="0.7"/>
+    <!-- Virola metalica -->
+    <rect x="63" y="-13" width="11" height="26" fill="#c8c8c8"/>
+    <!-- Lineas metalicas -->
+    <line x1="66" y1="-13" x2="66" y2="13" stroke="#aaaaaa" stroke-width="1"/>
+    <line x1="70" y1="-13" x2="70" y2="13" stroke="#e8e8e8" stroke-width="1"/>
+    <!-- Cuerpo del lapiz (amarillo) -->
+    <rect x="-62" y="-13" width="127" height="26" fill="#ffd600"/>
+    <!-- Brillo superior -->
+    <rect x="-62" y="-13" width="127" height="8" fill="#ffe566" opacity="0.55"/>
+    <!-- Sombra inferior -->
+    <rect x="-62" y="8" width="127" height="5" fill="#c8a800" opacity="0.45"/>
+    <!-- Cono de madera (punta) -->
+    <polygon points="-62,-13 -62,13 -92,0" fill="#d4936a"/>
+    <!-- Lineas de madera -->
+    <line x1="-62" y1="-4" x2="-88" y2="-2" stroke="#b87040" stroke-width="1" opacity="0.5"/>
+    <line x1="-62" y1="4" x2="-88" y2="2" stroke="#b87040" stroke-width="1" opacity="0.5"/>
+    <!-- Mina de grafito -->
+    <polygon points="-80,-5 -80,5 -98,0" fill="#2a2a2a"/>
+    <!-- Brillo mina -->
+    <polygon points="-80,-4 -80,-1 -96,0" fill="#555555" opacity="0.6"/>
+  </g>
+</svg>

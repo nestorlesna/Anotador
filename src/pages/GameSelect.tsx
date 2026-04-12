@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
 import { games } from '../data/games'
 
-const APP_VERSION = '1.0.0'
+const APP_VERSION = __APP_VERSION__
 
 export default function GameSelect() {
   return (

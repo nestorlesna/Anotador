@@ -1,8 +1,8 @@
 {
   "name": "apuntador",
   "private": true,
-  "version": "1.0.2",
-  "versionCode": 2,
+  "version": "1.0.3",
+  "versionCode": 3,
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -25,6 +25,7 @@
     "tailwindcss": "^4.2.2"
   },
   "devDependencies": {
+    "@capacitor/assets": "^3.0.5",
     "@eslint/js": "^9.39.4",
     "@types/node": "^24.12.0",
     "@types/react": "^19.2.14",

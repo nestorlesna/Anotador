@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useGame } from '../context/GameContext'
 
-const APP_VERSION = '1.0.0'
-const APP_VERSION_CODE = 1
+const APP_VERSION = __APP_VERSION__
+const APP_VERSION_CODE = __APP_VERSION_CODE__
 
 interface VersionInfo {
   version: string
